@@ -28,7 +28,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -58,5 +58,21 @@ class User extends Authenticatable implements PasskeyUser
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the campaigns created by the user.
+     */
+    public function campaigns(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Campaign::class);
+    }
+
+    /**
+     * Get the donations made by the user.
+     */
+    public function donations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Donation::class);
     }
 }
